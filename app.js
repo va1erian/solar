@@ -4708,7 +4708,7 @@ var BodyManipulator = (function () {
 			} else {
 				this.lockedPlanet.isDragged = true;
 				var diff = this.mouse.x - this.oldMouse.x;
-				this.lockedPlanet.distance += diff * window.innerWidth / 2;
+				this.lockedPlanet.distance -= diff * window.innerWidth / 2;
 			}
 		}
 	}, {
@@ -4768,13 +4768,13 @@ var CelestialBody = (function (_THREE$Mesh) {
 			});
 		}
 
-		var geometry = new THREE.SphereGeometry(props.radius, 16, 16);
+		var geometry = new THREE.SphereGeometry(props.radius < 8 ? props.radius * 2 : props.radius, 16, 16);
 
 		_get(Object.getPrototypeOf(CelestialBody.prototype), 'constructor', this).call(this, geometry, material);
 
 		this.name = name;
-		this.radius = props.radius;
-		this.distance = props.distance;
+		this.radius = props.radius < 8 ? props.radius * 2 : props.radius;
+		this.distance = props.distance + props.radius / 2;
 		this.orbitalSpeed = props.orbitalSpeed;
 		this.rotationSpeed = props.rotationSpeed;
 
@@ -4793,8 +4793,8 @@ var CelestialBody = (function (_THREE$Mesh) {
 				this.position.x = this.distance * Math.cos(this.revolution);
 				this.position.z = this.distance * Math.sin(this.revolution);
 
-				if (!this.isDragged) this.revolution += this.orbitalSpeed * 0.5 / delta;
-				this.rotateY(this.rotationSpeed / delta);
+				if (!this.isDragged) this.revolution += this.orbitalSpeed * 0.001 * delta;
+				this.rotateY(this.rotationSpeed * 0.001 * delta);
 			}
 		}
 	}]);
@@ -5076,11 +5076,11 @@ function OrbitControlsFactory(THREE) {
 						this.target = new THREE.Vector3();
 
 						// Limits to how far you can dolly in and out ( PerspectiveCamera only )
-						this.minDistance = 0;
+						this.minDistance = -Infinity;
 						this.maxDistance = Infinity;
 
 						// Limits to how far you can zoom in and out ( OrthographicCamera only )
-						this.minZoom = 0;
+						this.minZoom = -Infinity;
 						this.maxZoom = Infinity;
 
 						// How far you can orbit vertically, upper and lower limits.
@@ -6110,7 +6110,7 @@ var _jsVendorsOrbitControls2 = _interopRequireDefault(_jsVendorsOrbitControls);
 
 var system = {
 	'sun': {
-		radius: 20,
+		radius: 30,
 		distance: 0,
 		orbitalSpeed: 1,
 		rotationSpeed: 1
@@ -6118,13 +6118,13 @@ var system = {
 	'mercury': {
 		radius: 0.382,
 		distance: 53.9,
-		orbitalSpeed: 1,
+		orbitalSpeed: 1.607,
 		rotationSpeed: 1
 	},
 	'venus': {
 		radius: 0.948,
 		distance: 57.2,
-		orbitalSpeed: 1,
+		orbitalSpeed: 1.174,
 		rotationSpeed: 1
 	},
 	'earth': {
@@ -6136,31 +6136,31 @@ var system = {
 	'mars': {
 		radius: 0.532,
 		distance: 75.2,
-		orbitalSpeed: 1,
+		orbitalSpeed: 0.802,
 		rotationSpeed: 1
 	},
 	'jupiter': {
 		radius: 11.2,
 		distance: 102,
-		orbitalSpeed: 1,
+		orbitalSpeed: 0.434,
 		rotationSpeed: 1
 	},
 	'saturn': {
 		radius: 9.44,
 		distance: 195.5,
-		orbitalSpeed: 1,
+		orbitalSpeed: 0.323,
 		rotationSpeed: 1
 	},
 	'uranus': {
 		radius: 4,
 		distance: 310.2,
-		orbitalSpeed: 1,
+		orbitalSpeed: 0.228,
 		rotationSpeed: 1
 	},
 	'neptune': {
 		radius: 3.88,
 		distance: 360.1,
-		orbitalSpeed: 1,
+		orbitalSpeed: 0.182,
 		rotationSpeed: 1
 	}
 };
@@ -6210,9 +6210,9 @@ function addBody(name, props) {
 function makeSkySphere() {
 
 	var texture = THREE.ImageUtils.loadTexture('img/' + 'space' + '.jpg');
-	texture.wrapS = THREE.RepeatWrapping; // You do not need to set `.wrapT` in this case
+	texture.wrapS = THREE.ClampToEdgeWrapping;
+	texture.wrapT = THREE.ClampToEdgeWrapping;
 
-	texture.offset.x = 4 * Math.PI;
 	var material = new THREE.MeshBasicMaterial({
 		map: texture
 	});
