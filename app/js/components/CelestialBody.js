@@ -1,13 +1,12 @@
-
+import { WebCamTexture } from 'js/components/WebCamTexture';
 
 export class CelestialBody extends THREE.Mesh {
 	constructor(name, props) {
 		
 		let material;
 		if(name == 'sun') {
-			material = new THREE.MeshBasicMaterial({ 
-				map : THREE.ImageUtils.loadTexture('img/' + name + '.jpg')
-				});		
+			//console.log(WebCamTexture);
+			material = WebCamTexture;	
 		} else {
 			material = new THREE.MeshPhongMaterial({ 
 			map : THREE.ImageUtils.loadTexture('img/' + name + '.jpg')
@@ -24,13 +23,10 @@ export class CelestialBody extends THREE.Mesh {
 		this.orbitalSpeed  = props.orbitalSpeed;
 		this.rotationSpeed = props.rotationSpeed;
 		
-		console.log(props);
-		
 		this.revolution = 0;
 		this.day = 0;
 		this.isDragged = false;
-		// ##
-		// SAVE BINDING
+
 		this._binds = {};
 		this._binds.onUpdate = this._onUpdate.bind(this);
 	}
@@ -51,7 +47,7 @@ export class CelestialBody extends THREE.Mesh {
 export function makeOrbitCircle(body) {
 		//add orbit circle
 		let material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
-		let geometry = new THREE.CircleGeometry( body.distance, 64 );
+		let geometry = new THREE.CircleGeometry( Math.abs(body.distance), 64 );
 		
 		// Remove center vertex
 		geometry.vertices.shift();

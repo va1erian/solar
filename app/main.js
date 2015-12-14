@@ -1,9 +1,11 @@
 /* global THREE */
 import WebGLContext from 'js/core/Webgl';
 import loop from 'js/core/Loop';
+import { UpdateCamCallback } from 'js/components/WebCamTexture';
 import { CelestialBody, makeOrbitCircle } from 'js/components/CelestialBody';
 import BodyManipulator from 'js/components/BodyManipulator';
-import OrbitControlsFactory from '/js/vendors/OrbitControls';
+import OrbitControlsFactory from 'js/vendors/OrbitControls';
+
 
 let system = {
 	'sun' : {
@@ -86,8 +88,7 @@ const OrbitControls = OrbitControlsFactory(THREE);
 const controls = new OrbitControls(webgl.camera);
 
 const manipulator = new BodyManipulator(webgl.scene, webgl.camera);
-
-loop.add(manipulator.update.bind(manipulator));
+loop.add(UpdateCamCallback);
 loop.start();
 
 // ##
@@ -107,16 +108,21 @@ function addBody (name, props) {
 }
 
 function makeSkySphere() {
-		let material = new THREE.MeshBasicMaterial({ 
-		map : THREE.ImageUtils.loadTexture('img/' + 'space' + '.jpg')
-		});		
-		
-		let geometry = new THREE.SphereGeometry( 1500, 60, 40 );
-		
-		let skyMesh = new THREE.Mesh(geometry, material);
-		skyMesh.scale.set(-1, 1, 1);  
-		skyMesh.eulerOrder = 'XZY';  
-		skyMesh.renderDepth = 2000;  
-		
-		return skyMesh;
+	
+	let texture = THREE.ImageUtils.loadTexture('img/' + 'space' + '.jpg');
+	texture.wrapS = THREE.RepeatWrapping; // You do not need to set `.wrapT` in this case
+
+	texture.offset.x = 4 * Math.PI ;
+	let material = new THREE.MeshBasicMaterial({ 
+		map : texture
+	});		
+	
+	let geometry = new THREE.SphereGeometry( 4000, 60, 40 );
+	
+	let skyMesh = new THREE.Mesh(geometry, material);
+	skyMesh.scale.set(-1, 1, 1);  
+	skyMesh.eulerOrder = 'XZY';  
+	skyMesh.renderDepth = 5000;  
+	
+	return skyMesh;
 }

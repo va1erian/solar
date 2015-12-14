@@ -24,9 +24,21 @@ export default class BodyManipulator {
 	}
 	
 	onMouseMove(event) {
+		if(!this.down) return;
 		this.oldMouse = this.mouse.clone();
 		this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;	
+		
+		if(this.lockedPlanet == undefined) {
+			this.raycaster.setFromCamera(this.mouse, this.camera);
+			const intersects = this.raycaster.intersectObjects(this.scene.children);
+			const planetIndex = intersects.findIndex(el => el.object instanceof CelestialBody);
+			if(planetIndex != -1) this.lockedPlanet = intersects[planetIndex].object;
+		} else {
+			this.lockedPlanet.isDragged = true;
+			const diff = this.mouse.x - this.oldMouse.x; 
+			this.lockedPlanet.distance += diff * window.innerWidth / 2;
+		}
 	}
 	
 	onMouseUp(event) {
@@ -38,22 +50,6 @@ export default class BodyManipulator {
 			this.lockedPlanet = undefined;
 		}
 		window.removeEventListener( 'mousemove', this.moveListener, false );
-	}
-	
-	update() {
-		if(!this.down) return;
-		
-		if(this.lockedPlanet == undefined) {
-			this.raycaster.setFromCamera(this.mouse, this.camera);
-			const intersects = this.raycaster.intersectObjects(this.scene.children);
-			const planetIndex = intersects.findIndex(el => el.object instanceof CelestialBody);
-			if(planetIndex != -1) this.lockedPlanet = intersects[planetIndex].object;
-	
-		} else {
-			this.lockedPlanet.isDragged = true;
-			const diff = this.mouse.x - this.oldMouse.x; 
-			this.lockedPlanet.distance += diff * window.innerWidth / 2;
-		}
 	}
 }
 
