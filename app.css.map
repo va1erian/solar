@@ -1,0 +1,1 @@
+{"version":3,"sources":["app/style.css"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA","file":"public\\app.css","sourcesContent":["html, body {\r\n\tposition: relative;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\twidth: 100%;\r\n\theight : 100%;\r\n\tcolor: #f3f3f4;\r\n}\r\ncanvas {\r\n\tposition: absolute;\r\n}"]}
