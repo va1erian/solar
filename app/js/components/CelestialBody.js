@@ -1,15 +1,16 @@
-import { WebCamTexture } from 'js/components/WebCamTexture';
+import { WebCamTexture, IsCamAvailable } from 'js/components/WebCamTexture';
 
 export class CelestialBody extends THREE.Mesh {
 	constructor(name, props) {
 		
 		let material;
 		if(name == 'sun') {
-			//console.log(WebCamTexture);
-			material = WebCamTexture;	
+			material = new THREE.MeshBasicMaterial({ 
+				map : IsCamAvailable ? WebCamTexture : THREE.ImageUtils.loadTexture('img/' + name + '.jpg')
+			});	
 		} else {
 			material = new THREE.MeshPhongMaterial({ 
-			map : THREE.ImageUtils.loadTexture('img/' + name + '.jpg')
+				map : THREE.ImageUtils.loadTexture('img/' + name + '.jpg')
 			});	
 		}
 			
