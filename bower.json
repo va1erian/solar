@@ -1,0 +1,10 @@
+{
+  "name": "solar",
+  "version": "1.0.0",
+  "main": "public/app.js",
+  "dependencies": {
+    "dat-gui": "~0.5.1",
+    "three.js": "~0.72.0"
+  },
+  "overrides": {}
+}
