@@ -4839,22 +4839,14 @@ ctx.fillRect(0, 0, videoImage.width, videoImage.height);
 
 var WebCamTexture = new THREE.Texture(videoImage);
 exports.WebCamTexture = WebCamTexture;
-var IsCamAvailable = false;
+var IsCamAvailable = true;
 
 exports.IsCamAvailable = IsCamAvailable;
 WebCamTexture.minFilter = THREE.LinearFilter;
 WebCamTexture.magFilter = THREE.LinearFilter;
 
 function initWebCam() {
-	/*	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
- 	window.URL = window.URL || window.webkitURL;
- 	
- 	if (!navigator.getUserMedia) {
- 		console.log('No web cam available');
- 		IsCamAvailable = false;
- 	} else {
- 		navigator.getUserMedia({video: true}, gotStream, noStream);
- 	}*/
+	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
 	if (!navigator.mediaDevices) {
 		console.log("getUserMedia() not supported.");
