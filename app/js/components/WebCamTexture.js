@@ -9,22 +9,16 @@ ctx.fillStyle = '#000000';
 ctx.fillRect( 0, 0, videoImage.width, videoImage.height );
 
 export var WebCamTexture = new THREE.Texture(videoImage);
-export var IsCamAvailable = false;
+export var IsCamAvailable = true;
 
 WebCamTexture.minFilter = THREE.LinearFilter;
 WebCamTexture.magFilter = THREE.LinearFilter;
 
 function initWebCam() {
-/*	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-	window.URL = window.URL || window.webkitURL;
-	
-	if (!navigator.getUserMedia) {
-		console.log('No web cam available');
-		IsCamAvailable = false;
-	} else {
-		navigator.getUserMedia({video: true}, gotStream, noStream);
-	}*/
-	
+	navigator.getUserMedia = ( navigator.getUserMedia ||
+								navigator.webkitGetUserMedia ||
+								navigator.mozGetUserMedia ||
+								navigator.msGetUserMedia);
 	
 	if (!navigator.mediaDevices) {
 		console.log("getUserMedia() not supported.");
