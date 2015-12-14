@@ -14,13 +14,13 @@ export class CelestialBody extends THREE.Mesh {
 			});	
 		}
 			
-		let geometry = new THREE.SphereGeometry( props.radius, 16, 16 );
+		let geometry = new THREE.SphereGeometry(  props.radius < 8 ?   props.radius * 2 : props.radius, 16, 16 );
 		
 		super(geometry, material);
 		
 		this.name = name;
-		this.radius = props.radius;
-		this.distance = props.distance;
+		this.radius = props.radius < 8 ?   props.radius * 2 : props.radius;
+		this.distance = props.distance + props.radius / 2;
 		this.orbitalSpeed  = props.orbitalSpeed;
 		this.rotationSpeed = props.rotationSpeed;
 		
@@ -37,8 +37,8 @@ export class CelestialBody extends THREE.Mesh {
 			this.position.x = this.distance * Math.cos(this.revolution);
 			this.position.z = this.distance * Math.sin(this.revolution);
 			
-			if(!this.isDragged) this.revolution += this.orbitalSpeed * 0.5 / delta;
-			this.rotateY(this.rotationSpeed / delta);
+			if(!this.isDragged) this.revolution += this.orbitalSpeed * 0.001 * delta;
+			this.rotateY(this.rotationSpeed * 0.001 * delta);
 			
 		}
 	}

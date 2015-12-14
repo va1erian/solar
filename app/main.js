@@ -9,7 +9,7 @@ import OrbitControlsFactory from 'js/vendors/OrbitControls';
 
 let system = {
 	'sun' : {
-		radius: 20,
+		radius: 30,
 		distance: 0,
 		orbitalSpeed : 1,
 		rotationSpeed: 1
@@ -17,13 +17,13 @@ let system = {
 	'mercury' : {
 		radius: 0.382,
 		distance: 53.9,
-		orbitalSpeed : 1,
+		orbitalSpeed : 1.607,
 		rotationSpeed: 1
 	},
 	'venus' : {
 		radius: 0.948,
 		distance: 57.2,
-		orbitalSpeed : 1,
+		orbitalSpeed : 1.174,
 		rotationSpeed: 1
 	},
 	'earth' : {
@@ -35,31 +35,31 @@ let system = {
 	'mars' : {
 		radius: 0.532,
 		distance: 75.2,
-		orbitalSpeed : 1,
+		orbitalSpeed : 0.802,
 		rotationSpeed: 1
 	},
 	'jupiter' : {
 		radius: 11.2,
 		distance: 102,
-		orbitalSpeed : 1,
+		orbitalSpeed : 0.434,
 		rotationSpeed: 1
 	},
 	'saturn' : {
 		radius: 9.44,
 		distance: 195.5,
-		orbitalSpeed : 1,
+		orbitalSpeed : 0.323,
 		rotationSpeed: 1
 	},
 	'uranus' : {
 		radius: 4,
 		distance: 310.2,
-		orbitalSpeed : 1,
+		orbitalSpeed : 0.228,
 		rotationSpeed: 1
 	},
 	'neptune' : {
 		radius: 3.88,
 		distance: 360.1,
-		orbitalSpeed : 1,
+		orbitalSpeed : 0.182,
 		rotationSpeed: 1
 	}
 }
@@ -110,9 +110,9 @@ function addBody (name, props) {
 function makeSkySphere() {
 	
 	let texture = THREE.ImageUtils.loadTexture('img/' + 'space' + '.jpg');
-	texture.wrapS = THREE.RepeatWrapping; // You do not need to set `.wrapT` in this case
-
-	texture.offset.x = 4 * Math.PI ;
+	texture.wrapS = THREE.ClampToEdgeWrapping; 
+	texture.wrapT = THREE.ClampToEdgeWrapping;
+	
 	let material = new THREE.MeshBasicMaterial({ 
 		map : texture
 	});		

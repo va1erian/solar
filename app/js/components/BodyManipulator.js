@@ -37,7 +37,7 @@ export default class BodyManipulator {
 		} else {
 			this.lockedPlanet.isDragged = true;
 			const diff = this.mouse.x - this.oldMouse.x; 
-			this.lockedPlanet.distance += diff * window.innerWidth / 2;
+			this.lockedPlanet.distance -= diff * window.innerWidth / 2;
 		}
 	}
 	
