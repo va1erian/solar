@@ -3,7 +3,7 @@ import WebGLContext from 'js/core/Webgl';
 import loop from 'js/core/Loop';
 import { UpdateCamCallback } from 'js/components/WebCamTexture';
 import { CelestialBody, makeOrbitCircle } from 'js/components/CelestialBody';
-import BodyManipulator from 'js/components/BodyManipulator';
+import { BodyManipulator } from 'js/components/BodyManipulator';
 import OrbitControlsFactory from 'js/vendors/OrbitControls';
 
 

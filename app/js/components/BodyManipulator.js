@@ -1,6 +1,8 @@
 import { CelestialBody, makeOrbitCircle } from 'js/components/CelestialBody';
 
-export default class BodyManipulator {
+export var AnimationSpeed = 1;
+
+export class BodyManipulator {
 	constructor(scene, camera) {
 		this.scene  = scene;
 		this.camera = camera;
@@ -12,6 +14,8 @@ export default class BodyManipulator {
 		
 		window.addEventListener( 'mousedown', this.onMouseDown.bind(this), false );
 		window.addEventListener( 'mouseup', this.onMouseUp.bind(this), false );
+		window.addEventListener( 'keydown', this.onKeyDown.bind(this), false);
+		
 	}
 	
 	onMouseDown(event) {
@@ -50,6 +54,13 @@ export default class BodyManipulator {
 			this.lockedPlanet = undefined;
 		}
 		window.removeEventListener( 'mousemove', this.moveListener, false );
+	}
+	
+	onKeyDown(event) {
+		switch(event.key) {
+			case 'p' : AnimationSpeed += 0.5; return;
+			case 'o' : AnimationSpeed -= 0.5; return;
+		}
 	}
 }
 

@@ -1,4 +1,5 @@
 import { WebCamTexture, IsCamAvailable } from 'js/components/WebCamTexture';
+import { AnimationSpeed } from 'js/components/BodyManipulator';
 
 export class CelestialBody extends THREE.Mesh {
 	constructor(name, props) {
@@ -37,8 +38,8 @@ export class CelestialBody extends THREE.Mesh {
 			this.position.x = this.distance * Math.cos(this.revolution);
 			this.position.z = this.distance * Math.sin(this.revolution);
 			
-			if(!this.isDragged) this.revolution += this.orbitalSpeed * 0.001 * delta;
-			this.rotateY(this.rotationSpeed * 0.001 * delta);
+			if(!this.isDragged) this.revolution += this.orbitalSpeed * 0.001 * delta * AnimationSpeed;
+			this.rotateY(this.rotationSpeed * 0.001  * delta  * AnimationSpeed);
 			
 		}
 	}
@@ -46,17 +47,17 @@ export class CelestialBody extends THREE.Mesh {
 
 
 export function makeOrbitCircle(body) {
-		//add orbit circle
-		let material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
-		let geometry = new THREE.CircleGeometry( Math.abs(body.distance), 64 );
-		
-		// Remove center vertex
-		geometry.vertices.shift();
-		
-		var orbitCircle = new THREE.Line( geometry, material );
-		orbitCircle.rotateX(Math.PI / 2);
-		
-		body.orbitCircle = orbitCircle;
-		
-		return orbitCircle;
+	//add orbit circle
+	let material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+	let geometry = new THREE.CircleGeometry( Math.abs(body.distance), 64 );
+	
+	// Remove center vertex
+	geometry.vertices.shift();
+	
+	var orbitCircle = new THREE.Line( geometry, material );
+	orbitCircle.rotateX(Math.PI / 2);
+	
+	body.orbitCircle = orbitCircle;
+	
+	return orbitCircle;
 }
