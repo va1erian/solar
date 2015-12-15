@@ -1528,6 +1528,64 @@ if (typeof module !== 'undefined') {
   });
 }
 
+;/* jshint ignore:start */
+'use strict';
+
+(function () {
+  var WebSocket = window.WebSocket || window.MozWebSocket;
+  var br = window.brunch = window.brunch || {};
+  var ar = br['auto-reload'] = br['auto-reload'] || {};
+  if (!WebSocket || ar.disabled) return;
+
+  var cacheBuster = function cacheBuster(url) {
+    var date = Math.round(Date.now() / 1000).toString();
+    url = url.replace(/(\&|\\?)cacheBuster=\d*/, '');
+    return url + (url.indexOf('?') >= 0 ? '&' : '?') + 'cacheBuster=' + date;
+  };
+
+  var browser = navigator.userAgent.toLowerCase();
+  var forceRepaint = ar.forceRepaint || browser.indexOf('chrome') > -1;
+
+  var reloaders = {
+    page: function page() {
+      window.location.reload(true);
+    },
+
+    stylesheet: function stylesheet() {
+      [].slice.call(document.querySelectorAll('link[rel=stylesheet]')).filter(function (link) {
+        var val = link.getAttribute('data-autoreload');
+        return link.href && val != 'false';
+      }).forEach(function (link) {
+        link.href = cacheBuster(link.href);
+      });
+
+      // Hack to force page repaint after 25ms.
+      if (forceRepaint) setTimeout(function () {
+        document.body.offsetHeight;
+      }, 25);
+    }
+  };
+  var port = ar.port || 9485;
+  var host = br.server || window.location.hostname || 'localhost';
+
+  var connect = function connect() {
+    var connection = new WebSocket('ws://' + host + ':' + port);
+    connection.onmessage = function (event) {
+      if (ar.disabled) return;
+      var message = event.data;
+      var reloader = reloaders[message] || reloaders.page;
+      reloader();
+    };
+    connection.onerror = function () {
+      if (connection.readyState) connection.close();
+    };
+    connection.onclose = function () {
+      window.setTimeout(connect, 1000);
+    };
+  };
+  connect();
+})();
+/* jshint ignore:end */
 ;require.register("js/components/BodyManipulator", function(exports, require, module) {
 'use strict';
 
@@ -1540,6 +1598,10 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _jsComponentsCelestialBody = require('js/components/CelestialBody');
+
+var AnimationSpeed = 1;
+
+exports.AnimationSpeed = AnimationSpeed;
 
 var BodyManipulator = (function () {
 	function BodyManipulator(scene, camera) {
@@ -1555,6 +1617,7 @@ var BodyManipulator = (function () {
 
 		window.addEventListener('mousedown', this.onMouseDown.bind(this), false);
 		window.addEventListener('mouseup', this.onMouseUp.bind(this), false);
+		window.addEventListener('keydown', this.onKeyDown.bind(this), false);
 	}
 
 	_createClass(BodyManipulator, [{
@@ -1600,13 +1663,22 @@ var BodyManipulator = (function () {
 			}
 			window.removeEventListener('mousemove', this.moveListener, false);
 		}
+	}, {
+		key: 'onKeyDown',
+		value: function onKeyDown(event) {
+			switch (event.key) {
+				case 'p':
+					exports.AnimationSpeed = AnimationSpeed += 0.5;return;
+				case 'o':
+					exports.AnimationSpeed = AnimationSpeed -= 0.5;return;
+			}
+		}
 	}]);
 
 	return BodyManipulator;
 })();
 
-exports['default'] = BodyManipulator;
-module.exports = exports['default'];
+exports.BodyManipulator = BodyManipulator;
 });
 
 ;require.register("js/components/CelestialBody", function(exports, require, module) {
@@ -1627,6 +1699,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _jsComponentsWebCamTexture = require('js/components/WebCamTexture');
+
+var _jsComponentsBodyManipulator = require('js/components/BodyManipulator');
 
 var CelestialBody = (function (_THREE$Mesh) {
 	_inherits(CelestialBody, _THREE$Mesh);
@@ -1670,8 +1744,8 @@ var CelestialBody = (function (_THREE$Mesh) {
 				this.position.x = this.distance * Math.cos(this.revolution);
 				this.position.z = this.distance * Math.sin(this.revolution);
 
-				if (!this.isDragged) this.revolution += this.orbitalSpeed * 0.001 * delta;
-				this.rotateY(this.rotationSpeed * 0.001 * delta);
+				if (!this.isDragged) this.revolution += this.orbitalSpeed * 0.001 * delta * _jsComponentsBodyManipulator.AnimationSpeed;
+				this.rotateY(this.rotationSpeed * 0.001 * delta * _jsComponentsBodyManipulator.AnimationSpeed);
 			}
 		}
 	}]);
@@ -1942,9 +2016,9 @@ var WebGLContext = (function () {
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera(70, 0, 1, 5000);
-		this.camera.position.z = 100;
-		this.camera.position.y = 100;
-		this.camera.position.x = 100;
+		this.camera.position.z = 150;
+		this.camera.position.y = 150;
+		this.camera.position.x = 150;
 		this.renderer = _jsCoreDetector.Detector.webgl ? new THREE.WebGLRenderer({ antialias: true }) : new THREE.CanvasRenderer();
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setClearColor(0x0c171a);
@@ -3049,8 +3123,6 @@ var _jsComponentsCelestialBody = require('js/components/CelestialBody');
 
 var _jsComponentsBodyManipulator = require('js/components/BodyManipulator');
 
-var _jsComponentsBodyManipulator2 = _interopRequireDefault(_jsComponentsBodyManipulator);
-
 var _jsVendorsOrbitControls = require('js/vendors/OrbitControls');
 
 var _jsVendorsOrbitControls2 = _interopRequireDefault(_jsVendorsOrbitControls);
@@ -3134,7 +3206,7 @@ webgl.add(sky);
 var OrbitControls = (0, _jsVendorsOrbitControls2['default'])(THREE);
 var controls = new OrbitControls(webgl.camera);
 
-var manipulator = new _jsComponentsBodyManipulator2['default'](webgl.scene, webgl.camera);
+var manipulator = new _jsComponentsBodyManipulator.BodyManipulator(webgl.scene, webgl.camera);
 _jsCoreLoop2['default'].add(_jsComponentsWebCamTexture.UpdateCamCallback);
 _jsCoreLoop2['default'].start();
 
