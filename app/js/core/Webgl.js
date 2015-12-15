@@ -1,3 +1,4 @@
+import {Detector} from 'js/core/Detector';
 
 export default class WebGLContext {
 	constructor( ){
@@ -10,9 +11,7 @@ export default class WebGLContext {
 		this.camera.position.z = 30;
 		this.camera.position.y = -30;
 
-		this.renderer = new THREE.WebGLRenderer({
-			antialias : true
-		});
+		this.renderer = Detector.webgl? new THREE.WebGLRenderer({antialias :true}): new THREE.CanvasRenderer();
 		this.renderer.setPixelRatio( window.devicePixelRatio );
 		this.renderer.setClearColor(0x0c171a);
 		this.dom = this.renderer.domElement;

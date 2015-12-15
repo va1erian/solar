@@ -5,7 +5,7 @@ var videoImage = document.getElementById( 'videoImage' );
 var ctx = videoImage.getContext( '2d' );
 
 initWebCam();
-ctx.fillStyle = '#000000';
+ctx.fillStyle = '#FFDF40';
 ctx.fillRect( 0, 0, videoImage.width, videoImage.height );
 
 export var WebCamTexture = new THREE.Texture(videoImage);
