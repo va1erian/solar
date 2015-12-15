@@ -14,7 +14,7 @@ export class BodyManipulator {
 		
 		window.addEventListener( 'mousedown', this.onMouseDown.bind(this), false );
 		window.addEventListener( 'mouseup', this.onMouseUp.bind(this), false );
-		window.addEventListener( 'keydown', this.onKeyDown.bind(this), false);
+		document.addEventListener( 'keydown', this.onKeyDown.bind(this), false);
 		
 	}
 	
@@ -57,9 +57,9 @@ export class BodyManipulator {
 	}
 	
 	onKeyDown(event) {
-		switch(event.key) {
-			case 'p' : AnimationSpeed += 0.5; return;
-			case 'o' : AnimationSpeed -= 0.5; return;
+		switch(event.keyCode) {
+			case 80 : AnimationSpeed += 0.5; return;
+			case 79 : AnimationSpeed -= 0.5; return;
 		}
 	}
 }
