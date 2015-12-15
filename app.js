@@ -1942,9 +1942,9 @@ var WebGLContext = (function () {
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera(70, 0, 1, 5000);
-		this.camera.position.z = 30;
-		this.camera.position.y = -30;
-
+		this.camera.position.z = 100;
+		this.camera.position.y = 100;
+		this.camera.position.x = 100;
 		this.renderer = _jsCoreDetector.Detector.webgl ? new THREE.WebGLRenderer({ antialias: true }) : new THREE.CanvasRenderer();
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setClearColor(0x0c171a);
@@ -3156,7 +3156,7 @@ function addBody(name, props) {
 
 function makeSkySphere() {
 
-	var texture = THREE.ImageUtils.loadTexture('img/' + 'space' + '.jpg');
+	var texture = THREE.ImageUtils.loadTexture('img/space.jpg');
 	texture.wrapS = THREE.ClampToEdgeWrapping;
 	texture.wrapT = THREE.ClampToEdgeWrapping;
 
