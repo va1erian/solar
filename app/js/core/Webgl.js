@@ -8,9 +8,9 @@ export default class WebGLContext {
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera(70, 0, 1, 5000);
-		this.camera.position.z = 30;
-		this.camera.position.y = -30;
-
+		this.camera.position.z = 150;
+		this.camera.position.y = 150;
+		this.camera.position.x = 150;
 		this.renderer = Detector.webgl? new THREE.WebGLRenderer({antialias :true}): new THREE.CanvasRenderer();
 		this.renderer.setPixelRatio( window.devicePixelRatio );
 		this.renderer.setClearColor(0x0c171a);

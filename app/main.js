@@ -109,7 +109,7 @@ function addBody (name, props) {
 
 function makeSkySphere() {
 	
-	let texture = THREE.ImageUtils.loadTexture('img/' + 'space' + '.jpg');
+	let texture = THREE.ImageUtils.loadTexture('img/space.jpg');
 	texture.wrapS = THREE.ClampToEdgeWrapping; 
 	texture.wrapT = THREE.ClampToEdgeWrapping;
 	
